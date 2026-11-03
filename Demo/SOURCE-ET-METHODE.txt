@@ -1,0 +1,8 @@
+Boucle synthetique 124 BPM generee par Tools/RenderDemo.cpp (kick, pad Am-F-C-G, basse) : aucun sample externe.
+Chaque fichier AVANT-APRES : 4 mesures sans effet, puis les memes 4 mesures avec Swell Pump sur le pad + la basse (le kick n'est pas traite).
+Traitement hors ligne par PumpProcessor, le meme code que le VST3/Standalone. Meme gain de sortie pour avant et apres (pas de compensation : la pompe baisse le niveau moyen).
+01-Classic-Pump-AVANT-APRES.wav
+04-Big-Room-Duck-AVANT-APRES.wav
+09-Subtle-Glue-AVANT-APRES.wav
+12-Chopper-1-16-AVANT-APRES.wav
+16-Kick-Trigger-AVANT-APRES.wav
