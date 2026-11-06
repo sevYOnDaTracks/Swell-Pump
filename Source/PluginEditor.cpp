@@ -63,4 +63,4 @@ void PumpEditor::paint(juce::Graphics& g){g.fillAll(bg);g.setColour(line);g.draw
  if(sidechain)swellText(g,proc.sidechainActive.load()?"Seuil  (entree sidechain)":"Seuil  (pas de sidechain : entree principale)",290,558,300,18,11,muted);
  else if(proc.hostTempo.load())swellText(g,"Cale sur la grille du DAW",290,566,300,30,11,muted);else swellText(g,"Tempo manuel (pas de DAW)",290,558,300,18,11,muted);
  swellText(g,juce::String(presets[(size_t)proc.getCurrentProgram()].name)+"  /  reglages courants",30,(float)getHeight()-24,360,18,11,muted);
- swellText(g,"Swell-audio  /  0.1  /  by @sevyondatracks",300,(float)getHeight()-24,290,18,11,muted,juce::Justification::centredRight);}
+ swellText(g,"v" JucePlugin_VersionString "  /  by @sevyondatracks",300,(float)getHeight()-24,290,18,11,muted,juce::Justification::centredRight);}

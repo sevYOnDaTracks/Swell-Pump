@@ -1,3 +1,4 @@
+#include "ResizableEditor.h"
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 PumpProcessor::PumpProcessor():AudioProcessor(BusesProperties().withInput("Input",juce::AudioChannelSet::stereo(),true).withOutput("Output",juce::AudioChannelSet::stereo(),true).withInput("Sidechain",juce::AudioChannelSet::stereo(),false)),state(*this,nullptr,"SwellPump",layout()){}
@@ -46,4 +47,4 @@ void PumpProcessor::render(juce::AudioBuffer<float>& b,bool forced){
   for(int c=0;c<io.getNumChannels();++c)io.setSample(c,n,io.getSample(c,n)*g);}
  phaseDisplay=phase;float prior=gainDisplay.load();while(lowest<prior&&!gainDisplay.compare_exchange_weak(prior,lowest)){}
 }
-juce::AudioProcessorEditor* PumpProcessor::createEditor(){return new PumpEditor(*this);}juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter(){return new PumpProcessor();}
+juce::AudioProcessorEditor* PumpProcessor::createEditor(){return new ResizableEditor(*this, new PumpEditor(*this));}juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter(){return new PumpProcessor();}
