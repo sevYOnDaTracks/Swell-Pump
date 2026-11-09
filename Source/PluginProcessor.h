@@ -1,7 +1,12 @@
 #pragma once
 #include <juce_audio_utils/juce_audio_utils.h>
+#include "Licence/SwellLicence.h"
 #include "Presets.h"
 class PumpProcessor : public juce::AudioProcessor {
+public:
+    // Licence Swell : partagée par toutes les instances ; silence tant que le plugin n'est pas activé.
+    juce::SharedResourcePointer<swell::Licence> licence;
+
 public:
  PumpProcessor();
  juce::AudioProcessorValueTreeState state;

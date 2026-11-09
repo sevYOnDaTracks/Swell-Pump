@@ -23,7 +23,7 @@ Buffer pump(const Buffer& in,const Buffer& trigger,int preset){PumpProcessor p;p
  p.prepareToPlay(sr,256);Buffer out(2,in.getNumSamples()),block(sc?4:2,256);juce::MidiBuffer midi;
  for(int offset=0;offset<in.getNumSamples();offset+=256){int count=std::min(256,in.getNumSamples()-offset);block.clear();for(int c=0;c<2;++c){block.copyFrom(c,0,in,c,offset,count);if(sc)block.copyFrom(c+2,0,trigger,c,offset,count);}
   p.processBlock(block,midi);for(int c=0;c<2;++c)out.copyFrom(c,offset,block,c,0,count);}return out;}
-int main(int argc,char** argv){try{juce::ScopedJuceInitialiser_GUI init;if(argc!=2)throw std::runtime_error("Usage: PumpDemo output-folder");juce::File folder(argv[1]);folder.createDirectory();
+int main(int argc,char** argv){swell::Licence::unlockForTesting();try{juce::ScopedJuceInitialiser_GUI init;if(argc!=2)throw std::runtime_error("Usage: PumpDemo output-folder");juce::File folder(argv[1]);folder.createDirectory();
  const int length=beatLength()*4*bars;auto k=kick(length);auto m=music(length);
  auto mixdown=[&](const Buffer& musicPart){Buffer b(2,length);for(int c=0;c<2;++c){b.copyFrom(c,0,k,c,0,length);b.addFrom(c,0,musicPart,c,0,length);}return b;};
  auto dry=mixdown(m);const float gain=juce::Decibels::decibelsToGain(-1.f)/std::max(dry.getMagnitude(0,0,length),dry.getMagnitude(1,0,length));

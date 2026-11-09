@@ -21,7 +21,7 @@ void PumpProcessor::setValue(const char* id,float v){auto* p=state.getParameter(
 void PumpProcessor::setCurrentProgram(int i){i=juce::jlimit(0,presetCount-1,i);program=i;auto& p=presets[(size_t)i];setValue("curve",(float)p.curve);setValue("rate",(float)p.rate);setValue("trigger",(float)p.trigger);setValue("mix",p.mix);}
 void PumpProcessor::getStateInformation(juce::MemoryBlock& b){auto t=state.copyState();t.setProperty("preset",program.load(),nullptr);auto xml=t.createXml();copyXmlToBinary(*xml,b);}
 void PumpProcessor::setStateInformation(const void* data,int size){auto xml=getXmlFromBinary(data,size);if(xml&&xml->hasTagName(state.state.getType())){auto t=juce::ValueTree::fromXml(*xml);program=juce::jlimit(0,presetCount-1,(int)t.getProperty("preset",0));state.replaceState(t);}}
-void PumpProcessor::processBlock(juce::AudioBuffer<float>& b,juce::MidiBuffer&){render(b,false);}
+void PumpProcessor::processBlock(juce::AudioBuffer<float>& b,juce::MidiBuffer&){ if (! licence->isUnlocked()) { b.clear(); return; } render(b,false);}
 void PumpProcessor::processBlockBypassed(juce::AudioBuffer<float>& b,juce::MidiBuffer&){render(b,true);}
 void PumpProcessor::render(juce::AudioBuffer<float>& b,bool forced){
  juce::ScopedNoDenormals guard;const int samples=b.getNumSamples();if(samples==0)return;
@@ -47,4 +47,4 @@ void PumpProcessor::render(juce::AudioBuffer<float>& b,bool forced){
   for(int c=0;c<io.getNumChannels();++c)io.setSample(c,n,io.getSample(c,n)*g);}
  phaseDisplay=phase;float prior=gainDisplay.load();while(lowest<prior&&!gainDisplay.compare_exchange_weak(prior,lowest)){}
 }
-juce::AudioProcessorEditor* PumpProcessor::createEditor(){return new ResizableEditor(*this, new PumpEditor(*this));}juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter(){return new PumpProcessor();}
+juce::AudioProcessorEditor* PumpProcessor::createEditor(){return swell::LicenceGuard::attach (new ResizableEditor(*this, new PumpEditor(*this)));}juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter(){return new PumpProcessor();}

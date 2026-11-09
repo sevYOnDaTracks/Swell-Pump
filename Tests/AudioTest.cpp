@@ -6,7 +6,7 @@ void set(PumpProcessor& p,const char* id,float v){auto* a=p.state.getParameter(i
 // Renders 'seconds' of audio; main inputs get 'mainIn(n)', extra (sidechain) channels get 'scIn(n)'. Returns channel 0 output.
 template<class F,class G>std::vector<float> run(PumpProcessor& p,int channels,double seconds,F mainIn,G scIn){const int block=256;p.prepareToPlay(48000,block);juce::MidiBuffer m;juce::AudioBuffer<float>b(channels,block);std::vector<float> out;
  for(int start=0;start<(int)(48000*seconds);start+=block){for(int n=0;n<block;++n)for(int c=0;c<channels;++c)b.setSample(c,n,c<2?mainIn(start+n):scIn(start+n));p.processBlock(b,m);for(int n=0;n<block;++n){require(std::isfinite(b.getSample(0,n)),"non-finite output");out.push_back(b.getSample(0,n));}}return out;}
-int main(){try{juce::ScopedJuceInitialiser_GUI gui;auto dc=[](int){return .5f;};auto none=[](int){return 0.f;};
+int main(){swell::Licence::unlockForTesting();try{juce::ScopedJuceInitialiser_GUI gui;auto dc=[](int){return .5f;};auto none=[](int){return 0.f;};
  for(int i=0;i<presetCount;++i){PumpProcessor p;p.setCurrentProgram(i);auto out=run(p,2,2,dc,none);for(float v:out)require(v>=-1e-6f&&v<=.5f+1e-6f,"preset gain out of range");}
  for(int c=0;c<curveCount;++c){require(curveGain(c,0)<.05f,"curve does not duck on the beat");require(curveGain(c,.999f)>.95f,"curve does not recover");}
  {PumpProcessor p;set(p,"mix",0);auto out=run(p,2,1,dc,none);for(float v:out)require(v==.5f,"mix 0 is not transparent");}
